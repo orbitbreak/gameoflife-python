@@ -7,13 +7,7 @@ from pygame.locals import *
 colors = { 0:(0,0,0), 1:(0,255,0) }
 
 # Pixel dimensions of each cell
-block_size = (5,5)
-
-# Framerate in ms
-framerate = 500
-
-# 20% of cells will be filled at start
-percent_filled = 0.2
+block_size = (15,15)
 
 def main(argv):
 
@@ -33,8 +27,8 @@ def main(argv):
     exit = False
     while not exit:
 
-        # Slow things down to match the framerate
-        clock.tick(framerate)
+        # 500 ms clock
+        clock.tick(500)
 
         # Update the board
         update_board(board)
@@ -131,13 +125,11 @@ def init(game_size):
 # Make random start
 def make_random_board(game_size):
 
-    global percent_filled
-
-    # Game board set up using boolean dictionary
+    # bool dict for board structure
     board = dict()
     for x in range(game_size[0]):
         for y in range(game_size[1]):
-            if random.random() < percent_filled:
+            if random.random() < 0.2: # 20% filled rate
 				board[(x,y)] = 1
             else: board[(x,y)] = 0
     return board			
