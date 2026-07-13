@@ -30,6 +30,7 @@ test("public shell points at cache-busted local runtime assets", async () => {
   assert.doesNotMatch(html, /serviceWorker|manifest\.webmanifest/i);
   assert.match(html, /<noscript>/);
   assert.match(html, /id="canvas-summary" class="visually-hidden"><\/p>/);
+  assert.match(html, /aria-label="Interactive Conway’s Life grid" aria-describedby="canvas-instructions canvas-summary"/);
 });
 
 test("every ES module import carries the release cache key", async () => {

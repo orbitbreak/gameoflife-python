@@ -319,7 +319,6 @@ function updateReadouts() {
   ui.canvasSummary.textContent =
     `Generation ${engine.generation}. ${engine.population} living cells. ` +
     `${engine.wrap ? "Wrapping" : "Finite"} edges. Cell cursor at column ${selection.x + 1}, row ${selection.y + 1}.`;
-  ui.canvas.setAttribute("aria-label", ui.canvasSummary.textContent);
 }
 
 function render() {
