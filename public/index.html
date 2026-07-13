@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Draw, inspect, rewind, and share Conway’s Game of Life patterns in a fast, accessible browser laboratory.">
+  <meta name="theme-color" content="#0b1716">
+  <link rel="canonical" href="https://www.jasonsher.com/gameoflife/">
+  <link rel="icon" href="icons/life.svg?v=20260713-life1" type="image/svg+xml">
+  <link rel="stylesheet" href="site-nav.css?v=20260713-life1">
+  <link rel="stylesheet" href="styles.css?v=20260713-life1">
+  <script defer src="js/site-nav.js?v=20260713-life1"></script>
+  <script type="module" src="js/app.js?v=20260713-life1"></script>
+  <title>Conway’s Life Lab</title>
+</head>
+<body>
+  <!-- Source archaeologists: the complete tiny Python/Pygame ancestor lives in legacy/original/ in the repository. -->
+  <header class="app-header">
+    <div class="header-inner">
+      <details class="site-projects site-projects--in-header" data-site-projects>
+        <summary class="site-projects__summary">
+          <svg class="site-projects__icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16"></path>
+          </svg>
+          <span>Projects</span>
+        </summary>
+        <div class="site-projects__panel">
+          <nav aria-label="Site projects">
+            <ul class="site-projects__list">
+              <li class="site-projects__home"><a class="site-projects__link" href="/"><span class="site-projects__name">Home/Ripples</span></a></li>
+              <li class="site-projects__group">
+                <span class="site-projects__section-title" id="site-projects-graphics">graphics-toys</span>
+                <ul class="site-projects__group-list" aria-labelledby="site-projects-graphics">
+                  <li><a class="site-projects__link" href="/gravitypoints"><span class="site-projects__name">Gravity Points</span></a></li>
+                  <li><a class="site-projects__link" href="/particlepusher"><span class="site-projects__name">Particle Pusher</span></a></li>
+                  <li><a class="site-projects__link" href="/meshmorpher"><span class="site-projects__name">Mesh Morpher</span></a></li>
+                </ul>
+              </li>
+              <li class="site-projects__group">
+                <span class="site-projects__section-title" id="site-projects-games">games</span>
+                <ul class="site-projects__group-list" aria-labelledby="site-projects-games">
+                  <li><a class="site-projects__link" href="/musicbox/"><span class="site-projects__name">MusicBox</span></a></li>
+                  <li><a class="site-projects__link" href="/platformjumper"><span class="site-projects__name">Platform Jumper</span></a></li>
+                  <li><a class="site-projects__link" href="/snakeautorandom"><span class="site-projects__name">Snake Autorandom</span></a></li>
+                  <li><a class="site-projects__link" href="/tictactoe/"><span class="site-projects__name">Hard Mode Tic-Tac-Toe</span></a></li>
+                  <li><a class="site-projects__link" href="/gameoflife/" aria-current="page"><span class="site-projects__name">Conway’s Life Lab</span></a></li>
+                </ul>
+              </li>
+              <li class="site-projects__group">
+                <span class="site-projects__section-title" id="site-projects-edu">edu101</span>
+                <ul class="site-projects__group-list" aria-labelledby="site-projects-edu">
+                  <li><a class="site-projects__link" href="/LLM101/"><span class="site-projects__name">LLM101</span><span class="site-projects__description">Interactive textbook on AI/ML for LLM development</span></a></li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </details>
+      <a class="brand" href="/gameoflife/" aria-label="Conway’s Life Lab home">
+        <img src="icons/life.svg?v=20260713-life1" width="42" height="42" alt="">
+        <span>Life Lab</span>
+      </a>
+      <span class="rule-chip">B3 / S23</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Conway’s Game of Life, explained</p>
+      <h1 id="page-title">Draw a world. Watch its rules think.</h1>
+      <p class="hero-copy">Every cell follows one tiny local rule. Inspect the next decision, rewind an evolution, or share a pattern—entirely in your browser.</p>
+    </section>
+
+    <div class="lab-shell">
+      <section class="board-panel" aria-labelledby="world-heading">
+        <div class="panel-heading board-heading">
+          <div>
+            <p class="kicker">The world</p>
+            <h2 id="world-heading">Generation <span id="heading-generation">0</span></h2>
+          </div>
+          <p id="run-state" class="state-pill">Paused</p>
+        </div>
+
+        <div class="transport" aria-label="Simulation controls">
+          <button id="play-button" class="button primary" type="button" aria-pressed="false">
+            <span aria-hidden="true">▶</span> Play
+          </button>
+          <button id="step-button" class="button" type="button">Step</button>
+          <button id="undo-button" class="button" type="button" disabled>Undo</button>
+          <fieldset class="draw-modes">
+            <legend class="visually-hidden">Pointer drawing mode</legend>
+            <label><input type="radio" name="draw-mode" value="draw" checked> Draw</label>
+            <label><input type="radio" name="draw-mode" value="erase"> Erase</label>
+          </fieldset>
+          <label class="speed-control" for="speed-input">
+            Speed
+            <input id="speed-input" type="range" min="1" max="30" value="8">
+            <output id="speed-output" for="speed-input">8 gen/s</output>
+          </label>
+        </div>
+
+        <div id="canvas-frame" class="canvas-frame">
+          <canvas id="life-canvas" width="864" height="528" tabindex="0" role="img" aria-describedby="canvas-instructions canvas-summary"></canvas>
+          <p id="canvas-instructions" class="visually-hidden">Use arrow keys to move the cell cursor. Press Space to toggle a cell, Enter to inspect it, D for draw mode, or E for erase mode.</p>
+        </div>
+        <p class="canvas-hint">Drag to draw or erase. Keyboard: arrows move · Space toggles · Enter inspects.</p>
+        <p id="canvas-summary" class="visually-hidden"></p>
+
+        <dl class="stats" aria-label="Generation statistics">
+          <div><dt>Generation</dt><dd id="stat-generation">0</dd></div>
+          <div><dt>Population</dt><dd id="stat-population">0</dd></div>
+          <div><dt>Births</dt><dd id="stat-births">0</dd></div>
+          <div><dt>Deaths</dt><dd id="stat-deaths">0</dd></div>
+          <div><dt>Topology</dt><dd id="stat-topology">Finite</dd></div>
+        </dl>
+
+        <section class="timeline-card" aria-labelledby="timeline-heading">
+          <div class="timeline-title-row">
+            <div>
+              <p class="kicker">Evolution Time Machine</p>
+              <h3 id="timeline-heading">Rewind, then branch</h3>
+            </div>
+            <output id="timeline-position" for="timeline-input">1 of 1</output>
+          </div>
+          <canvas id="population-graph" class="population-graph" width="720" height="96" role="img" aria-label="Population history graph"></canvas>
+          <label class="visually-hidden" for="timeline-input">Time Machine position</label>
+          <input id="timeline-input" class="timeline-input" type="range" min="0" max="0" value="0">
+          <p id="timeline-label" class="timeline-label">Beginning · generation 0</p>
+          <p id="recurrence-status" class="recognition">No recurrence recognized yet.</p>
+        </section>
+      </section>
+
+      <aside class="controls-panel" aria-label="Life Lab tools">
+        <section class="tool-card" aria-labelledby="setup-heading">
+          <div class="panel-heading compact">
+            <div><p class="kicker">World setup</p><h2 id="setup-heading">Shape the laboratory</h2></div>
+          </div>
+          <div class="field-grid dimensions">
+            <label>Columns <input id="width-input" type="number" min="8" max="180" value="72" inputmode="numeric"></label>
+            <label>Rows <input id="height-input" type="number" min="8" max="120" value="44" inputmode="numeric"></label>
+          </div>
+          <label class="field">Edges
+            <select id="topology-select">
+              <option value="finite">Finite (outside is dead)</option>
+              <option value="wrap">Wrap around</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button id="new-board-button" class="button" type="button">New empty world</button>
+            <button id="clear-button" class="button subtle" type="button">Clear</button>
+          </div>
+          <label class="check-row"><input id="age-checkbox" type="checkbox" checked> Shade cells by age</label>
+        </section>
+
+        <section class="tool-card" aria-labelledby="soup-heading">
+          <div class="panel-heading compact">
+            <div><p class="kicker">Deterministic soup</p><h2 id="soup-heading">Same seed, same world</h2></div>
+          </div>
+          <label class="field">Seed <input id="seed-input" type="text" value="life-lab" maxlength="80" autocomplete="off"></label>
+          <label class="field density-field" for="density-input">
+            Living density
+            <input id="density-input" type="range" min="1" max="75" value="20">
+            <output id="density-output" for="density-input">20%</output>
+          </label>
+          <button id="randomize-button" class="button wide" type="button">Make seeded soup</button>
+        </section>
+
+        <section class="tool-card" aria-labelledby="pattern-heading">
+          <div class="panel-heading compact">
+            <div><p class="kicker">Pattern library</p><h2 id="pattern-heading">Meet Life’s classics</h2></div>
+          </div>
+          <label class="field">Starter
+            <select id="pattern-select">
+              <option value="block">Block · still life</option>
+              <option value="blinker">Blinker · period 2</option>
+              <option value="glider" selected>Glider · moving recurrence</option>
+              <option value="pulsar">Pulsar · period 3</option>
+              <option value="gun">Gosper glider gun</option>
+            </select>
+          </label>
+          <p id="pattern-description" class="tool-copy">A five-cell spaceship that moves diagonally.</p>
+          <button id="load-pattern-button" class="button wide" type="button">Load centered pattern</button>
+        </section>
+
+        <section class="tool-card microscope-card" aria-labelledby="microscope-heading">
+          <div class="panel-heading compact">
+            <div><p class="kicker">Cell Microscope</p><h2 id="microscope-heading">Why this fate?</h2></div>
+          </div>
+          <p id="microscope-coordinate" class="cell-coordinate">Column 37 · row 23</p>
+          <p id="microscope-state" class="fate-line">Empty now → remains empty</p>
+          <p id="microscope-reason" class="tool-copy">It has 0 living neighbors. Birth needs exactly three.</p>
+          <div id="neighbor-dots" class="neighbor-dots" aria-hidden="true"></div>
+        </section>
+
+        <details class="tool-card exchange-card">
+          <summary>Import, export &amp; share</summary>
+          <div class="details-body">
+            <p class="tool-copy">Uses standard Conway RLE. Imported dimensions and links are strictly bounded.</p>
+            <label class="field" for="rle-input">RLE pattern
+              <textarea id="rle-input" rows="7" maxlength="100000" spellcheck="false" placeholder="x = 3, y = 3, rule = B3/S23&#10;bo$2bo$3o!"></textarea>
+            </label>
+            <div class="button-row wrap-buttons">
+              <button id="import-button" class="button" type="button">Import RLE</button>
+              <button id="export-button" class="button subtle" type="button">Export current</button>
+              <button id="share-button" class="button subtle" type="button">Copy share link</button>
+            </div>
+            <label class="field" for="share-output">Share link
+              <input id="share-output" type="text" readonly placeholder="Generated when you copy a link">
+            </label>
+          </div>
+        </details>
+
+        <details class="tool-card guide-card">
+          <summary>How Life works</summary>
+          <div class="details-body prose">
+            <p>Each generation is computed all at once. A live cell survives with two or three live neighbors. A dead cell is born with exactly three. Every other cell is empty next time.</p>
+            <p>Finite edges treat everything beyond the frame as dead. Wrapping edges connect opposite sides into a torus.</p>
+            <p>The Time Machine keeps the latest 240 states. Scrub backward and then edit or step to discard the abandoned future and begin a new branch.</p>
+          </div>
+        </details>
+      </aside>
+    </div>
+  </main>
+
+  <noscript><p class="noscript">Conway’s Life Lab needs JavaScript to run. The simulation is entirely local once enabled.</p></noscript>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <footer>
+    <p>Silent, local, and dependency-free. Nothing leaves this browser.</p>
+  </footer>
+</body>
+</html>
