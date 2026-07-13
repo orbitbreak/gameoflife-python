@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Draw, inspect, rewind, and share Conway’s Game of Life patterns in a fast, accessible browser laboratory.">
+  <meta name="description" content="Play Conway’s Game of Life in your browser. Cells are born with three live neighbors and survive with two or three.">
   <meta name="theme-color" content="#0b1716">
   <link rel="canonical" href="https://www.jasonsher.com/gameoflife/">
   <link rel="icon" href="icons/life.svg?v=20260713-life1" type="image/svg+xml">
@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="styles.css?v=20260713-life1">
   <script defer src="js/site-nav.js?v=20260713-life1"></script>
   <script type="module" src="js/app.js?v=20260713-life1"></script>
-  <title>Conway’s Life Lab</title>
+  <title>Conway’s Game of Life</title>
 </head>
 <body>
   <!-- Source archaeologists: the complete tiny Python/Pygame ancestor lives in legacy/original/ in the repository. -->
@@ -60,15 +60,14 @@
         <img src="icons/life.svg?v=20260713-life1" width="42" height="42" alt="">
         <span>Life Lab</span>
       </a>
-      <span class="rule-chip">B3 / S23</span>
+      <span class="rule-chip" title="Birth with 3 live neighbors; survival with 2 or 3">Birth 3 · Survive 2–3</span>
     </div>
   </header>
 
   <main>
     <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Conway’s Game of Life, explained</p>
-      <h1 id="page-title">Draw a world. Watch its rules think.</h1>
-      <p class="hero-copy">Every cell follows one tiny local rule. Inspect the next decision, rewind an evolution, or share a pattern—entirely in your browser.</p>
+      <h1 id="page-title">Conway’s Game of Life</h1>
+      <p class="hero-copy">Each cell looks at its eight neighbors. A dead cell is born with exactly three live neighbors, while a live cell survives with two or three. All other cells die or stay empty.</p>
     </section>
 
     <div class="lab-shell">

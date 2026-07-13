@@ -33,6 +33,17 @@ test("public shell points at cache-busted local runtime assets", async () => {
   assert.match(html, /aria-label="Interactive Conway’s Life grid" aria-describedby="canvas-instructions canvas-summary"/);
 });
 
+test("plain-language hero explains Conway's rules without cryptic marketing copy", async () => {
+  const html = await read("public/index.html");
+  assert.match(html, /<title>Conway’s Game of Life<\/title>/);
+  assert.match(html, /<h1 id="page-title">Conway’s Game of Life<\/h1>/);
+  assert.match(html, /Each cell looks at its eight neighbors\./);
+  assert.match(html, /A dead cell is born with exactly three live neighbors/);
+  assert.match(html, /a live cell survives with two or three/);
+  assert.match(html, />Birth 3 · Survive 2–3<\/span>/);
+  assert.doesNotMatch(html, /Draw a world|rules think|B3 \/ S23/);
+});
+
 test("every ES module import carries the release cache key", async () => {
   for (const file of ["public/js/app.js", "public/js/patterns.js", "public/js/share.js"]) {
     const source = await read(file);
