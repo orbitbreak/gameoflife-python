@@ -21,10 +21,10 @@ test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
     "site-nav.css?v=20260713-life1",
-    "styles.css?v=20260713-life1",
+    "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
-    "js/app.js?v=20260713-life2",
+    "js/app.js?v=20260713-life3",
   ]) assert.match(html, new RegExp(asset.replace(/[.?]/g, "\\$&")));
   assert.doesNotMatch(html, /<script[^>]+https?:/i);
   assert.doesNotMatch(html, /serviceWorker|manifest\.webmanifest/i);
@@ -37,10 +37,8 @@ test("plain-language hero explains Conway's rules without cryptic marketing copy
   const html = await read("public/index.html");
   assert.match(html, /<title>Conway’s Game of Life<\/title>/);
   assert.match(html, /<h1 id="page-title">Conway’s Game of Life<\/h1>/);
-  assert.match(html, /John Conway created the Game of Life/);
-  assert.match(html, /Scientific American<\/cite> in 1970/);
-  assert.match(html, /cellular automaton studied in mathematics and computer science/);
-  assert.match(html, /abstract mathematical system—not a realistic model of living organisms/);
+  assert.match(html, /Created by mathematician John Conway in 1970/);
+  assert.match(html, /classic example of how complex behavior can emerge from a few simple local rules/);
   assert.match(html, /Each cell looks at its eight neighbors\./);
   assert.match(html, /A dead cell is born with exactly three live neighbors/);
   assert.match(html, /a live cell survives with two or three/);
@@ -53,10 +51,10 @@ test("every ES module import carries the release cache key", async () => {
     const source = await read(file);
     const imports = [...source.matchAll(/from\s+["'](\.\/[^"']+)["']/g)].map((match) => match[1]);
     assert.ok(imports.length > 0, `${file} has imports`);
-    for (const specifier of imports) assert.match(specifier, /\?v=20260713-life[12]$/);
+    for (const specifier of imports) assert.match(specifier, /\?v=20260713-life3$/);
   }
   const app = await read("public/js/app.js");
-  assert.match(app, /\.\/history\.js\?v=20260713-life2/);
+  assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
 test("grouped navigation keeps MusicBox first and Life last in games", async () => {
@@ -66,7 +64,7 @@ test("grouped navigation keeps MusicBox first and Life last in games", async () 
   const platform = games.indexOf("Platform Jumper");
   const snake = games.indexOf("Snake Autorandom");
   const ticTacToe = games.indexOf("Hard Mode Tic-Tac-Toe");
-  const life = games.indexOf("Conway’s Life Lab");
+  const life = games.indexOf("Conway’s Game of Life");
   assert.ok(musicbox >= 0 && musicbox < platform && platform < snake && snake < ticTacToe && ticTacToe < life);
   assert.match(games, /href="\/gameoflife\/" aria-current="page"/);
 });

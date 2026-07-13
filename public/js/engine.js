@@ -9,7 +9,7 @@ export const LIMITS = Object.freeze({
 export const CLASSIC_SOUP = Object.freeze({
   width: 72,
   height: 44,
-  seed: "life-lab",
+  seed: 997834349,
   density: 0.2,
 });
 

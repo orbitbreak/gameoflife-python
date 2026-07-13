@@ -1,5 +1,5 @@
-import { assertDimensions } from "./engine.js?v=20260713-life1";
-import { exportRLE, parseRLE, patternCells } from "./patterns.js?v=20260713-life1";
+import { assertDimensions } from "./engine.js?v=20260713-life3";
+import { exportRLE, parseRLE, patternCells } from "./patterns.js?v=20260713-life3";
 
 export const SHARE_LIMITS = Object.freeze({
   maxFragmentLength: 16000,

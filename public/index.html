@@ -8,9 +8,9 @@
   <link rel="canonical" href="https://www.jasonsher.com/gameoflife/">
   <link rel="icon" href="icons/life.svg?v=20260713-life1" type="image/svg+xml">
   <link rel="stylesheet" href="site-nav.css?v=20260713-life1">
-  <link rel="stylesheet" href="styles.css?v=20260713-life1">
+  <link rel="stylesheet" href="styles.css?v=20260713-life3">
   <script defer src="js/site-nav.js?v=20260713-life1"></script>
-  <script type="module" src="js/app.js?v=20260713-life2"></script>
+  <script type="module" src="js/app.js?v=20260713-life3"></script>
   <title>Conway’s Game of Life</title>
 </head>
 <body>
@@ -43,7 +43,7 @@
                   <li><a class="site-projects__link" href="/platformjumper"><span class="site-projects__name">Platform Jumper</span></a></li>
                   <li><a class="site-projects__link" href="/snakeautorandom"><span class="site-projects__name">Snake Autorandom</span></a></li>
                   <li><a class="site-projects__link" href="/tictactoe/"><span class="site-projects__name">Hard Mode Tic-Tac-Toe</span></a></li>
-                  <li><a class="site-projects__link" href="/gameoflife/" aria-current="page"><span class="site-projects__name">Conway’s Life Lab</span></a></li>
+                  <li><a class="site-projects__link" href="/gameoflife/" aria-current="page"><span class="site-projects__name">Conway’s Game of Life</span></a></li>
                 </ul>
               </li>
               <li class="site-projects__group">
@@ -56,9 +56,9 @@
           </nav>
         </div>
       </details>
-      <a class="brand" href="/gameoflife/" aria-label="Conway’s Life Lab home">
+      <a class="brand" href="/gameoflife/" aria-label="Conway’s Game of Life home">
         <img src="icons/life.svg?v=20260713-life1" width="42" height="42" alt="">
-        <span>Life Lab</span>
+        <span>Conway’s Game of Life</span>
       </a>
       <span class="rule-chip" title="Birth with 3 live neighbors; survival with 2 or 3">Birth 3 · Survive 2–3</span>
     </div>
@@ -67,7 +67,7 @@
   <main>
     <section class="hero" aria-labelledby="page-title">
       <h1 id="page-title">Conway’s Game of Life</h1>
-      <p class="hero-copy">Mathematician John Conway created the Game of Life, which Martin Gardner introduced to a wide audience in <cite>Scientific American</cite> in 1970. It is a cellular automaton studied in mathematics and computer science because complex behavior can emerge from a few simple local rules. Its language of cells, birth, and death borrows from biology, but the game is an abstract mathematical system—not a realistic model of living organisms.</p>
+      <p class="hero-copy">Created by mathematician John Conway in 1970, this cellular automaton became a classic example of how complex behavior can emerge from a few simple local rules.</p>
       <p class="hero-copy">Each cell looks at its eight neighbors. A dead cell is born with exactly three live neighbors, while a live cell survives with two or three. All other cells die or stay empty.</p>
     </section>
 
@@ -130,10 +130,10 @@
         </section>
       </section>
 
-      <aside class="controls-panel" aria-label="Life Lab tools">
+      <aside class="controls-panel" aria-label="Conway’s Game of Life tools">
         <section class="tool-card" aria-labelledby="setup-heading">
           <div class="panel-heading compact">
-            <div><p class="kicker">World setup</p><h2 id="setup-heading">Shape the laboratory</h2></div>
+            <div><p class="kicker">World setup</p><h2 id="setup-heading">Shape the world</h2></div>
           </div>
           <div class="field-grid dimensions">
             <label>Columns <input id="width-input" type="number" min="8" max="180" value="72" inputmode="numeric"></label>
@@ -156,7 +156,7 @@
           <div class="panel-heading compact">
             <div><p class="kicker">Deterministic soup</p><h2 id="soup-heading">Same seed, same world</h2></div>
           </div>
-          <label class="field">Seed <input id="seed-input" type="text" value="life-lab" maxlength="80" autocomplete="off"></label>
+          <label class="field">Seed <input id="seed-input" type="text" value="conways-game-of-life" maxlength="80" autocomplete="off"></label>
           <label class="field density-field" for="density-input">
             Living density
             <input id="density-input" type="range" min="1" max="75" value="20">
@@ -223,7 +223,7 @@
     </div>
   </main>
 
-  <noscript><p class="noscript">Conway’s Life Lab needs JavaScript to run. The simulation is entirely local once enabled.</p></noscript>
+  <noscript><p class="noscript">Conway’s Game of Life needs JavaScript to run. The simulation is entirely local once enabled.</p></noscript>
 
   <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
   <footer>

@@ -1,4 +1,4 @@
-import { LIMITS } from "./engine.js?v=20260713-life1";
+import { LIMITS } from "./engine.js?v=20260713-life3";
 
 export const RLE_LIMITS = Object.freeze({
   maxTextLength: 100000,
@@ -141,7 +141,7 @@ function wrapBody(body, width = 70) {
   return lines.join("\n");
 }
 
-export function exportRLE({ width, height, cells }, { name = "Conway’s Life Lab pattern" } = {}) {
+export function exportRLE({ width, height, cells }, { name = "Conway’s Game of Life pattern" } = {}) {
   validatePatternDimensions(width, height);
   if (!(cells instanceof Uint8Array) || cells.length !== width * height) {
     throw new TypeError("RLE export requires a correctly sized Uint8Array.");
@@ -150,7 +150,7 @@ export function exportRLE({ width, height, cells }, { name = "Conway’s Life La
   for (let y = 0; y < height; y += 1) rows.push(encodeRow(cells, width, y));
   const body = `${rows.join("$")}!`;
   const safeName = String(name).replace(/[\r\n]/g, " ").slice(0, 80);
-  return `#N ${safeName}\n#C Exported by Conway’s Life Lab\nx = ${width}, y = ${height}, rule = B3/S23\n${wrapBody(body)}\n`;
+  return `#N ${safeName}\n#C Exported by Conway’s Game of Life\nx = ${width}, y = ${height}, rule = B3/S23\n${wrapBody(body)}\n`;
 }
 
 export function patternCells(pattern, width = pattern.width, height = pattern.height, options = {}) {

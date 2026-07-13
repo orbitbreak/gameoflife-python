@@ -1,7 +1,7 @@
-import { LifeEngine, LIMITS, createClassicSoup, gridLineCells } from "./engine.js?v=20260713-life1";
-import { BUILTIN_PATTERNS, exportRLE, parseRLE, patternCells } from "./patterns.js?v=20260713-life1";
-import { RecurrenceDetector, TimeMachine, describeRecurrence, shouldPauseForRecurrence } from "./history.js?v=20260713-life2";
-import { copyTextWithFallback, decodeShareState, encodeShareState, shareInvalidationTarget } from "./share.js?v=20260713-life1";
+import { LifeEngine, LIMITS, createClassicSoup, gridLineCells } from "./engine.js?v=20260713-life3";
+import { BUILTIN_PATTERNS, exportRLE, parseRLE, patternCells } from "./patterns.js?v=20260713-life3";
+import { RecurrenceDetector, TimeMachine, describeRecurrence, shouldPauseForRecurrence } from "./history.js?v=20260713-life3";
+import { copyTextWithFallback, decodeShareState, encodeShareState, shareInvalidationTarget } from "./share.js?v=20260713-life3";
 
 const element = (id) => {
   const found = document.getElementById(id);
@@ -504,8 +504,8 @@ ui.topology.addEventListener("change", () => {
 ui.randomize.addEventListener("click", () => {
   pause();
   invalidateShareLink();
-  engine.randomize(ui.seed.value || "life-lab", Number(ui.density.value) / 100);
-  resetHistory(`Seeded soup “${(ui.seed.value || "life-lab").slice(0, 24)}”`);
+  engine.randomize(ui.seed.value || "conways-game-of-life", Number(ui.density.value) / 100);
+  resetHistory(`Seeded soup “${(ui.seed.value || "conways-game-of-life").slice(0, 24)}”`);
   render();
   showToast(`Seeded soup ready at generation zero. Population ${engine.population}.`);
 });
@@ -515,7 +515,7 @@ ui.pattern.addEventListener("change", () => {
 ui.loadPattern.addEventListener("click", () => loadPattern(BUILTIN_PATTERNS[ui.pattern.value]));
 ui.importRLE.addEventListener("click", importPattern);
 ui.exportRLE.addEventListener("click", () => {
-  ui.rle.value = exportRLE(engine, { name: `Life Lab generation ${engine.generation}` });
+  ui.rle.value = exportRLE(engine, { name: `Conway’s Game of Life generation ${engine.generation}` });
   ui.rle.focus();
   ui.rle.select();
   showToast("Current board exported as standard RLE.");

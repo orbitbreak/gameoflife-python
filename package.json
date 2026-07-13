@@ -1,5 +1,5 @@
 {
-  "name": "conways-life-lab",
+  "name": "conways-game-of-life",
   "version": "1.0.0",
   "private": true,
   "type": "module",

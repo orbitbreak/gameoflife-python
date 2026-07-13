@@ -1,6 +1,6 @@
-# Conway’s Life Lab
+# Conway’s Game of Life
 
-An interactive, framework-free web laboratory for Conway’s Game of Life. Draw a
+An interactive, framework-free browser version of Conway’s Game of Life. Draw a
 seed, inspect why any cell will live or die, rewind its evolution, recognize
 recurring structures, and exchange standard RLE patterns—all in the browser.
 
