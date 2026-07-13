@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Play Conway’s Game of Life in your browser. Cells are born with three live neighbors and survive with two or three.">
+  <meta name="description" content="Explore Conway’s Game of Life, the 1970 cellular automaton where simple neighbor rules create complex patterns.">
   <meta name="theme-color" content="#0b1716">
   <link rel="canonical" href="https://www.jasonsher.com/gameoflife/">
   <link rel="icon" href="icons/life.svg?v=20260713-life1" type="image/svg+xml">
   <link rel="stylesheet" href="site-nav.css?v=20260713-life1">
   <link rel="stylesheet" href="styles.css?v=20260713-life1">
   <script defer src="js/site-nav.js?v=20260713-life1"></script>
-  <script type="module" src="js/app.js?v=20260713-life1"></script>
+  <script type="module" src="js/app.js?v=20260713-life2"></script>
   <title>Conway’s Game of Life</title>
 </head>
 <body>
@@ -67,6 +67,7 @@
   <main>
     <section class="hero" aria-labelledby="page-title">
       <h1 id="page-title">Conway’s Game of Life</h1>
+      <p class="hero-copy">Mathematician John Conway created the Game of Life, which Martin Gardner introduced to a wide audience in <cite>Scientific American</cite> in 1970. It is a cellular automaton studied in mathematics and computer science because complex behavior can emerge from a few simple local rules. Its language of cells, birth, and death borrows from biology, but the game is an abstract mathematical system—not a realistic model of living organisms.</p>
       <p class="hero-copy">Each cell looks at its eight neighbors. A dead cell is born with exactly three live neighbors, while a live cell survives with two or three. All other cells die or stay empty.</p>
     </section>
 
@@ -81,7 +82,7 @@
         </div>
 
         <div class="transport" aria-label="Simulation controls">
-          <button id="play-button" class="button primary" type="button" aria-pressed="false">
+          <button id="play-button" class="button primary" type="button" aria-pressed="false" aria-keyshortcuts="Space" title="Play or pause (Space outside the grid)">
             <span aria-hidden="true">▶</span> Play
           </button>
           <button id="step-button" class="button" type="button">Step</button>
@@ -213,6 +214,7 @@
           <summary>How Life works</summary>
           <div class="details-body prose">
             <p>Each generation is computed all at once. A live cell survives with two or three live neighbors. A dead cell is born with exactly three. Every other cell is empty next time.</p>
+            <p>Press Space from the page to play or pause. When the grid is focused, Space instead toggles the selected cell; focused controls keep their normal keyboard behavior.</p>
             <p>Finite edges treat everything beyond the frame as dead. Wrapping edges connect opposite sides into a torus.</p>
             <p>The Time Machine keeps the latest 240 states. Scrub backward and then edit or step to discard the abandoned future and begin a new branch.</p>
           </div>

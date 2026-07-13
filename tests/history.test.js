@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 
 import { LifeEngine } from "../public/js/engine.js";
 import { BUILTIN_PATTERNS, patternCells } from "../public/js/patterns.js";
-import { RecurrenceDetector, TimeMachine, describeRecurrence } from "../public/js/history.js";
+import { RecurrenceDetector, TimeMachine, describeRecurrence, shouldPauseForRecurrence } from "../public/js/history.js";
 
 function engineWith(pattern, width = 30, height = 20) {
   return LifeEngine.fromCells(width, height, patternCells(pattern, width, height));
@@ -82,12 +82,22 @@ test("recurrence detector recognizes glider translation", () => {
     { type: event.type, period: event.period, dx: event.dx, dy: event.dy },
     { type: "translated-recurrence", period: 4, dx: 1, dy: 1 },
   );
+  assert.equal(shouldPauseForRecurrence(event), false);
+  assert.match(describeRecurrence(event), /Simulation continues\./);
   for (let generation = 5; generation <= 8; generation += 1) {
     glider.step();
     event = detector.observe(glider.cells, glider.width, glider.height, generation);
     assert.equal(event.type, "translated-recurrence");
     assert.equal(event.period, 4);
   }
+});
+
+test("only moving recurrence leaves playback running", () => {
+  assert.equal(shouldPauseForRecurrence(null), false);
+  assert.equal(shouldPauseForRecurrence({ type: "translated-recurrence" }), false);
+  assert.equal(shouldPauseForRecurrence({ type: "extinction" }), true);
+  assert.equal(shouldPauseForRecurrence({ type: "still-life" }), true);
+  assert.equal(shouldPauseForRecurrence({ type: "oscillator" }), true);
 });
 
 test("wrapping boards do not report ambiguous translated recurrence", () => {

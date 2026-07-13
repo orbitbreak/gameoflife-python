@@ -196,6 +196,10 @@ export class RecurrenceDetector {
   }
 }
 
+export function shouldPauseForRecurrence(event) {
+  return Boolean(event && event.type !== "translated-recurrence");
+}
+
 export function describeRecurrence(event) {
   if (!event) return "No recurrence recognized yet.";
   if (event.type === "extinction") return `Extinction at generation ${event.generation}.`;
@@ -208,7 +212,7 @@ export function describeRecurrence(event) {
   if (event.type === "translated-recurrence") {
     const horizontal = event.dx === 0 ? "" : `${Math.abs(event.dx)} cell${Math.abs(event.dx) === 1 ? "" : "s"} ${event.dx > 0 ? "right" : "left"}`;
     const vertical = event.dy === 0 ? "" : `${Math.abs(event.dy)} cell${Math.abs(event.dy) === 1 ? "" : "s"} ${event.dy > 0 ? "down" : "up"}`;
-    return `Moving recurrence recognized: period ${event.period}, shifted ${[horizontal, vertical].filter(Boolean).join(" and ")}.`;
+    return `Moving recurrence recognized: period ${event.period}, shifted ${[horizontal, vertical].filter(Boolean).join(" and ")}. Simulation continues.`;
   }
   return "A recurrence was recognized.";
 }

@@ -1,6 +1,6 @@
 import { LifeEngine, LIMITS, createClassicSoup, gridLineCells } from "./engine.js?v=20260713-life1";
 import { BUILTIN_PATTERNS, exportRLE, parseRLE, patternCells } from "./patterns.js?v=20260713-life1";
-import { RecurrenceDetector, TimeMachine, describeRecurrence } from "./history.js?v=20260713-life1";
+import { RecurrenceDetector, TimeMachine, describeRecurrence, shouldPauseForRecurrence } from "./history.js?v=20260713-life2";
 import { copyTextWithFallback, decodeShareState, encodeShareState, shareInvalidationTarget } from "./share.js?v=20260713-life1";
 
 const element = (id) => {
@@ -115,6 +115,11 @@ function setPlaying(next) {
 
 function pause() {
   if (playing) setPlaying(false);
+}
+
+function recurrenceSignature(event) {
+  if (!event) return "";
+  return [event.type, event.period ?? "", event.dx ?? "", event.dy ?? ""].join(":");
 }
 
 function observeBeginning() {
@@ -333,6 +338,7 @@ function advanceOne() {
   invalidateShareLink();
   engine.step();
   timeMachine.push(engine.snapshot(`Generation ${engine.generation}`), `Generation ${engine.generation}`);
+  const previousRecurrence = recurrenceEvent;
   recurrenceEvent = detector.observe(
     engine.cells,
     engine.width,
@@ -341,8 +347,10 @@ function advanceOne() {
     { wrap: engine.wrap },
   );
   if (recurrenceEvent) {
-    setPlaying(false);
-    showToast(describeRecurrence(recurrenceEvent));
+    if (shouldPauseForRecurrence(recurrenceEvent)) pause();
+    if (recurrenceSignature(recurrenceEvent) !== recurrenceSignature(previousRecurrence)) {
+      showToast(describeRecurrence(recurrenceEvent));
+    }
   }
   return recurrenceEvent;
 }
@@ -579,6 +587,25 @@ ui.canvas.addEventListener("keydown", (event) => {
     document.querySelector(`input[name="draw-mode"][value="${value}"]`).checked = true;
     showToast(`${value === "draw" ? "Draw" : "Erase"} mode selected.`);
   }
+});
+
+document.addEventListener("keydown", (event) => {
+  const isSpace = event.code === "Space" || event.key === " " || event.key === "Spacebar";
+  if (
+    !isSpace || event.defaultPrevented || event.repeat || event.isComposing ||
+    event.ctrlKey || event.altKey || event.metaKey || event.shiftKey
+  ) return;
+  if (event.target === ui.canvas) return;
+  if (
+    event.target instanceof Element &&
+    event.target.closest('input, select, textarea, button, summary, a[href], [contenteditable]:not([contenteditable="false"]), [role="button"], [role="slider"], [role="checkbox"], [role="radio"], [role="switch"], [role="textbox"], [role="combobox"], [role="menuitem"]')
+  ) return;
+
+  event.preventDefault();
+  setPlaying(!playing);
+  showToast(playing
+    ? `Playing at ${ui.speed.value} generations per second.`
+    : `Paused at generation ${engine.generation}.`);
 });
 
 document.addEventListener("visibilitychange", () => {

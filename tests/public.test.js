@@ -24,7 +24,7 @@ test("public shell points at cache-busted local runtime assets", async () => {
     "styles.css?v=20260713-life1",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
-    "js/app.js?v=20260713-life1",
+    "js/app.js?v=20260713-life2",
   ]) assert.match(html, new RegExp(asset.replace(/[.?]/g, "\\$&")));
   assert.doesNotMatch(html, /<script[^>]+https?:/i);
   assert.doesNotMatch(html, /serviceWorker|manifest\.webmanifest/i);
@@ -37,6 +37,10 @@ test("plain-language hero explains Conway's rules without cryptic marketing copy
   const html = await read("public/index.html");
   assert.match(html, /<title>Conway’s Game of Life<\/title>/);
   assert.match(html, /<h1 id="page-title">Conway’s Game of Life<\/h1>/);
+  assert.match(html, /John Conway created the Game of Life/);
+  assert.match(html, /Scientific American<\/cite> in 1970/);
+  assert.match(html, /cellular automaton studied in mathematics and computer science/);
+  assert.match(html, /abstract mathematical system—not a realistic model of living organisms/);
   assert.match(html, /Each cell looks at its eight neighbors\./);
   assert.match(html, /A dead cell is born with exactly three live neighbors/);
   assert.match(html, /a live cell survives with two or three/);
@@ -49,8 +53,10 @@ test("every ES module import carries the release cache key", async () => {
     const source = await read(file);
     const imports = [...source.matchAll(/from\s+["'](\.\/[^"']+)["']/g)].map((match) => match[1]);
     assert.ok(imports.length > 0, `${file} has imports`);
-    for (const specifier of imports) assert.match(specifier, /\?v=20260713-life1$/);
+    for (const specifier of imports) assert.match(specifier, /\?v=20260713-life[12]$/);
   }
+  const app = await read("public/js/app.js");
+  assert.match(app, /\.\/history\.js\?v=20260713-life2/);
 });
 
 test("grouped navigation keeps MusicBox first and Life last in games", async () => {
@@ -80,11 +86,17 @@ test("clipboard failure keeps the generated share link available for manual copy
 });
 
 test("explicit transport actions announce state without making playback chatty", async () => {
+  const html = await read("public/index.html");
   const source = await read("public/js/app.js");
+  assert.match(html, /id="play-button"[^>]+aria-keyshortcuts="Space"/);
+  assert.match(html, /Press Space from the page to play or pause/);
   assert.match(source, /Generation \$\{engine\.generation\}\. Population \$\{engine\.population\}\./);
   assert.match(source, /Rewound to generation/);
   assert.match(source, /if \(event\.repeat\) return;/);
   assert.match(source, /!event\.ctrlKey && !event\.altKey && !event\.metaKey/);
+  assert.match(source, /event\.target === ui\.canvas/);
+  assert.match(source, /event\.isComposing/);
+  assert.match(source, /shouldPauseForRecurrence\(recurrenceEvent\)/);
 });
 
 test("public boundary contains only the intended static runtime", async () => {
