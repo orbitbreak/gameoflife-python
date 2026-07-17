@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0b1716">
   <link rel="canonical" href="https://www.jasonsher.com/gameoflife/">
   <link rel="icon" href="icons/life.svg?v=20260713-life1" type="image/svg+xml">
-  <link rel="stylesheet" href="site-nav.css?v=20260713-life1">
+  <link rel="stylesheet" href="site-nav.css?v=20260717-nav3">
   <link rel="stylesheet" href="styles.css?v=20260713-life3">
   <script defer src="js/site-nav.js?v=20260713-life1"></script>
   <script type="module" src="js/app.js?v=20260713-life3"></script>
@@ -27,9 +27,15 @@
         <div class="site-projects__panel">
           <nav aria-label="Site projects">
             <ul class="site-projects__list">
-              <li class="site-projects__home"><a class="site-projects__link" href="/"><span class="site-projects__name">Home/Ripples</span></a></li>
+              <li class="site-projects__home"><a class="site-projects__link" href="/"><span class="site-projects__name">Home (Ripples)</span></a></li>
               <li class="site-projects__group">
-                <span class="site-projects__section-title" id="site-projects-graphics">graphics-toys</span>
+                <span class="site-projects__section-title" id="site-projects-featured">Featured</span>
+                <ul class="site-projects__group-list" aria-labelledby="site-projects-featured">
+                  <li><a class="site-projects__link" href="/musicbox/"><span class="site-projects__name">MusicBox</span></a></li>
+                </ul>
+              </li>
+              <li class="site-projects__group">
+                <span class="site-projects__section-title" id="site-projects-graphics">Graphics</span>
                 <ul class="site-projects__group-list" aria-labelledby="site-projects-graphics">
                   <li><a class="site-projects__link" href="/gravitypoints"><span class="site-projects__name">Gravity Points</span></a></li>
                   <li><a class="site-projects__link" href="/particlepusher"><span class="site-projects__name">Particle Pusher</span></a></li>
@@ -37,9 +43,8 @@
                 </ul>
               </li>
               <li class="site-projects__group">
-                <span class="site-projects__section-title" id="site-projects-games">games</span>
+                <span class="site-projects__section-title" id="site-projects-games">Games</span>
                 <ul class="site-projects__group-list" aria-labelledby="site-projects-games">
-                  <li><a class="site-projects__link" href="/musicbox/"><span class="site-projects__name">MusicBox</span></a></li>
                   <li><a class="site-projects__link" href="/platformjumper"><span class="site-projects__name">Platform Jumper</span></a></li>
                   <li><a class="site-projects__link" href="/snakeautorandom"><span class="site-projects__name">Snake Autorandom</span></a></li>
                   <li><a class="site-projects__link" href="/tictactoe/"><span class="site-projects__name">Hard Mode Tic-Tac-Toe</span></a></li>
@@ -47,7 +52,7 @@
                 </ul>
               </li>
               <li class="site-projects__group">
-                <span class="site-projects__section-title" id="site-projects-edu">edu101</span>
+                <span class="site-projects__section-title" id="site-projects-edu">Edu-101</span>
                 <ul class="site-projects__group-list" aria-labelledby="site-projects-edu">
                   <li><a class="site-projects__link" href="/LLM101/"><span class="site-projects__name">LLM101</span><span class="site-projects__description">Interactive textbook on AI/ML for LLM development</span></a></li>
                 </ul>

@@ -20,7 +20,7 @@ async function listFiles(directory, prefix = "public") {
 test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
-    "site-nav.css?v=20260713-life1",
+    "site-nav.css?v=20260717-nav3",
     "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
@@ -57,16 +57,31 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("grouped navigation keeps MusicBox first and Life last in games", async () => {
+test("project navigation features MusicBox separately with exact section titles", async () => {
   const html = await read("public/index.html");
-  const games = html.slice(html.indexOf('id="site-projects-games"'), html.indexOf('id="site-projects-edu"'));
-  const musicbox = games.indexOf("MusicBox");
+  const css = await read("public/site-nav.css");
+  const home = html.indexOf(">Home (Ripples)<");
+  const featuredStart = html.indexOf('id="site-projects-featured"');
+  const graphicsStart = html.indexOf('id="site-projects-graphics"');
+  const gamesStart = html.indexOf('id="site-projects-games"');
+  const eduStart = html.indexOf('id="site-projects-edu"');
+  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
+  const featured = html.slice(featuredStart, graphicsStart);
+  const games = html.slice(gamesStart, eduStart);
+  assert.match(featured, />Featured<\/span>/);
+  assert.match(featured, /href="\/musicbox\/"/);
+  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 1);
+  assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
+  assert.match(games, />Games<\/span>/);
+  assert.doesNotMatch(games, /MusicBox/);
+  assert.match(html.slice(eduStart), />Edu-101<\/span>/);
   const platform = games.indexOf("Platform Jumper");
   const snake = games.indexOf("Snake Autorandom");
   const ticTacToe = games.indexOf("Hard Mode Tic-Tac-Toe");
   const life = games.indexOf("Conway’s Game of Life");
-  assert.ok(musicbox >= 0 && musicbox < platform && platform < snake && snake < ticTacToe && ticTacToe < life);
+  assert.ok(platform >= 0 && platform < snake && snake < ticTacToe && ticTacToe < life);
   assert.match(games, /href="\/gameoflife\/" aria-current="page"/);
+  assert.doesNotMatch(css, /text-transform:\s*uppercase/);
 });
 
 test("app selects Classic Soup for fresh visits and clears malformed or stale Life hashes", async () => {
@@ -116,7 +131,7 @@ test("public boundary contains only the intended static runtime", async () => {
 });
 
 test("shared navigation and preserved legacy bytes match their fixed release hashes", async () => {
-  assert.equal(await digest("public/site-nav.css"), "4fd818e9ecbfa76877d3b008c912fe2f9b1892eb0def01a24daa926ed688dd71");
+  assert.equal(await digest("public/site-nav.css"), "90f2f2f5218a87f9c986aca830fdd7b50547a74a0b89cfd8bec7ef3632e91f38");
   assert.equal(await digest("public/js/site-nav.js"), "ba32a5d679238a223fbdd0772230a30989446a86dca15eccf41b3084b4dab982");
   assert.equal(await digest("legacy/original/README.md"), "989fe7bce42e503b95af5d1fc3e9e66737cb676ccd2a7eb85a1afa63a2bbefe1");
   assert.equal(await digest("legacy/original/gameoflife.py"), "b585a5a32437e0adce964b8fccfe8e43ca87d1f77f6391cbb799bfce2d2a64f7");
