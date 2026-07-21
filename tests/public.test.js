@@ -57,20 +57,27 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("project navigation features MusicBox separately with exact section titles", async () => {
+test("project navigation features MusicBox and Doppler Radar in exact sections", async () => {
   const html = await read("public/index.html");
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
   const featuredStart = html.indexOf('id="site-projects-featured"');
+  const toolsStart = html.indexOf('id="site-projects-tools"');
   const graphicsStart = html.indexOf('id="site-projects-graphics"');
   const gamesStart = html.indexOf('id="site-projects-games"');
   const eduStart = html.indexOf('id="site-projects-edu"');
-  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
-  const featured = html.slice(featuredStart, graphicsStart);
+  assert.ok(home >= 0 && home < featuredStart && featuredStart < toolsStart && toolsStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
+  const featured = html.slice(featuredStart, toolsStart);
+  const tools = html.slice(toolsStart, graphicsStart);
   const games = html.slice(gamesStart, eduStart);
   assert.match(featured, />Featured<\/span>/);
   assert.match(featured, /href="\/musicbox\/"/);
   assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 1);
+  assert.match(tools, />Tools<\/span>/);
+  assert.match(tools, /href="\/radar\/"/);
+  assert.match(tools, />Doppler Radar<\/span>/);
+  assert.match(tools, />Interactive recent weather radar<\/span>/);
+  assert.equal((tools.match(/class="site-projects__link"/g) ?? []).length, 1);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
   assert.doesNotMatch(games, /MusicBox/);
