@@ -20,7 +20,7 @@ async function listFiles(directory, prefix = "public") {
 test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
-    "site-nav.css?v=20260721-nav4",
+    "site-nav.css?v=20260722-nav5",
     "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
@@ -57,27 +57,27 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("project navigation features MusicBox and Doppler Radar in exact sections", async () => {
+test("project navigation features MusicBox and Weather Radar in exact sections", async () => {
   const html = await read("public/index.html");
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
   const featuredStart = html.indexOf('id="site-projects-featured"');
   const graphicsStart = html.indexOf('id="site-projects-graphics"');
   const gamesStart = html.indexOf('id="site-projects-games"');
-  const eduStart = html.indexOf('id="site-projects-edu"');
-  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
+  const learnStart = html.indexOf('id="site-projects-learn"');
+  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < learnStart);
   const featured = html.slice(featuredStart, graphicsStart);
-  const games = html.slice(gamesStart, eduStart);
+  const games = html.slice(gamesStart, learnStart);
   assert.match(featured, />Featured<\/span>/);
   assert.match(featured, /href="\/musicbox\/"/);
-  assert.match(featured, /href="\/radar\/"/);
+  assert.match(featured, /href="\/radar\/"[^>]*><span class="site-projects__name">Weather Radar<\/span>/);
   assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 2);
   assert.doesNotMatch(html, /site-projects-tools|site-projects__description|>Tools<\/span>/);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
   assert.doesNotMatch(games, /MusicBox/);
-  assert.match(html.slice(eduStart), />Edu-101<\/span>/);
-  assert.match(html.slice(eduStart), /href="\/LLM101\/"[^>]*><span class="site-projects__name">LLM101<\/span>/);
+  assert.match(html.slice(learnStart), />Learn<\/span>/);
+  assert.match(html.slice(learnStart), /href="\/LLM101\/"[^>]*><span class="site-projects__name">LLMs 101 Textbook<\/span>/);
   const platform = games.indexOf("Platform Jumper");
   const snake = games.indexOf("Snake Autorandom");
   const ticTacToe = games.indexOf("Hard Mode Tic-Tac-Toe");
@@ -85,7 +85,9 @@ test("project navigation features MusicBox and Doppler Radar in exact sections",
   assert.ok(platform >= 0 && platform < snake && snake < ticTacToe && ticTacToe < life);
   assert.match(games, /href="\/gameoflife\/" aria-current="page"/);
   assert.doesNotMatch(css, /text-transform:\s*uppercase/);
+  assert.match(css, /\.site-projects__section-title[\s\S]*?background: #eef2f6/);
   assert.match(css, /#site-projects-featured[\s\S]*?background: #fff0a8/);
+  assert.match(css, /@media \(forced-colors: active\)[\s\S]*?\.site-projects__section-title[\s\S]*?background: Canvas/);
 });
 
 test("app selects Classic Soup for fresh visits and clears malformed or stale Life hashes", async () => {
@@ -135,7 +137,7 @@ test("public boundary contains only the intended static runtime", async () => {
 });
 
 test("shared navigation and preserved legacy bytes match their fixed release hashes", async () => {
-  assert.equal(await digest("public/site-nav.css"), "1b8a2be38ef98414281ecd10b29c18a152e3db17487b1c3f55c89d14448e85d9");
+  assert.equal(await digest("public/site-nav.css"), "55fd75c65dfb627163347c83f907b9e894ada55cde523ba7c8cddfa6f7fda1e1");
   assert.equal(await digest("public/js/site-nav.js"), "ba32a5d679238a223fbdd0772230a30989446a86dca15eccf41b3084b4dab982");
   assert.equal(await digest("legacy/original/README.md"), "989fe7bce42e503b95af5d1fc3e9e66737cb676ccd2a7eb85a1afa63a2bbefe1");
   assert.equal(await digest("legacy/original/gameoflife.py"), "b585a5a32437e0adce964b8fccfe8e43ca87d1f77f6391cbb799bfce2d2a64f7");
