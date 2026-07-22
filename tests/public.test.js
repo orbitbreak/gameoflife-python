@@ -20,7 +20,7 @@ async function listFiles(directory, prefix = "public") {
 test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
-    "site-nav.css?v=20260717-nav3",
+    "site-nav.css?v=20260721-nav4",
     "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
@@ -62,26 +62,22 @@ test("project navigation features MusicBox and Doppler Radar in exact sections",
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
   const featuredStart = html.indexOf('id="site-projects-featured"');
-  const toolsStart = html.indexOf('id="site-projects-tools"');
   const graphicsStart = html.indexOf('id="site-projects-graphics"');
   const gamesStart = html.indexOf('id="site-projects-games"');
   const eduStart = html.indexOf('id="site-projects-edu"');
-  assert.ok(home >= 0 && home < featuredStart && featuredStart < toolsStart && toolsStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
-  const featured = html.slice(featuredStart, toolsStart);
-  const tools = html.slice(toolsStart, graphicsStart);
+  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < eduStart);
+  const featured = html.slice(featuredStart, graphicsStart);
   const games = html.slice(gamesStart, eduStart);
   assert.match(featured, />Featured<\/span>/);
   assert.match(featured, /href="\/musicbox\/"/);
-  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 1);
-  assert.match(tools, />Tools<\/span>/);
-  assert.match(tools, /href="\/radar\/"/);
-  assert.match(tools, />Doppler Radar<\/span>/);
-  assert.match(tools, />Interactive recent weather radar<\/span>/);
-  assert.equal((tools.match(/class="site-projects__link"/g) ?? []).length, 1);
+  assert.match(featured, /href="\/radar\/"/);
+  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /site-projects-tools|site-projects__description|>Tools<\/span>/);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
   assert.doesNotMatch(games, /MusicBox/);
   assert.match(html.slice(eduStart), />Edu-101<\/span>/);
+  assert.match(html.slice(eduStart), /href="\/LLM101\/"[^>]*><span class="site-projects__name">LLM101<\/span>/);
   const platform = games.indexOf("Platform Jumper");
   const snake = games.indexOf("Snake Autorandom");
   const ticTacToe = games.indexOf("Hard Mode Tic-Tac-Toe");
@@ -89,6 +85,7 @@ test("project navigation features MusicBox and Doppler Radar in exact sections",
   assert.ok(platform >= 0 && platform < snake && snake < ticTacToe && ticTacToe < life);
   assert.match(games, /href="\/gameoflife\/" aria-current="page"/);
   assert.doesNotMatch(css, /text-transform:\s*uppercase/);
+  assert.match(css, /#site-projects-featured[\s\S]*?background: #fff0a8/);
 });
 
 test("app selects Classic Soup for fresh visits and clears malformed or stale Life hashes", async () => {
@@ -138,7 +135,7 @@ test("public boundary contains only the intended static runtime", async () => {
 });
 
 test("shared navigation and preserved legacy bytes match their fixed release hashes", async () => {
-  assert.equal(await digest("public/site-nav.css"), "90f2f2f5218a87f9c986aca830fdd7b50547a74a0b89cfd8bec7ef3632e91f38");
+  assert.equal(await digest("public/site-nav.css"), "1b8a2be38ef98414281ecd10b29c18a152e3db17487b1c3f55c89d14448e85d9");
   assert.equal(await digest("public/js/site-nav.js"), "ba32a5d679238a223fbdd0772230a30989446a86dca15eccf41b3084b4dab982");
   assert.equal(await digest("legacy/original/README.md"), "989fe7bce42e503b95af5d1fc3e9e66737cb676ccd2a7eb85a1afa63a2bbefe1");
   assert.equal(await digest("legacy/original/gameoflife.py"), "b585a5a32437e0adce964b8fccfe8e43ca87d1f77f6391cbb799bfce2d2a64f7");

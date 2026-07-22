@@ -108,6 +108,16 @@
   line-height: 1.2;
 }
 
+#site-projects-featured {
+  margin: 0.12rem 0.28rem 0.18rem;
+  border: 1px solid #dfb62a;
+  border-radius: 0.42rem;
+  padding: 0.38rem 0.42rem 0.32rem;
+  background: #fff0a8;
+  box-shadow: inset 0 -1px 0 rgb(120 82 0 / 14%);
+  color: #604300;
+}
+
 .site-projects__group-list {
   display: grid;
   gap: 0.12rem;
@@ -151,13 +161,6 @@
 
 .site-projects__name {
   font-weight: 750;
-}
-
-.site-projects__description {
-  margin-top: 0.08rem;
-  color: #4c586f;
-  font-size: 0.8rem;
-  font-weight: 520;
 }
 
 .site-projects--in-header {
@@ -213,6 +216,13 @@
   .site-projects__link[aria-current="page"] {
     outline: 2px solid LinkText;
     outline-offset: -2px;
+  }
+
+  #site-projects-featured {
+    border: 2px solid Highlight;
+    background: Canvas;
+    box-shadow: none;
+    color: CanvasText;
   }
 }
 
