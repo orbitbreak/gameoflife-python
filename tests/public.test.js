@@ -20,7 +20,7 @@ async function listFiles(directory, prefix = "public") {
 test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
-    "site-nav.css?v=20260722-nav5",
+    "site-nav.css?v=20260728-nav6",
     "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
@@ -57,7 +57,7 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("project navigation features MusicBox and Weather Radar in exact sections", async () => {
+test("project navigation features MusicBox and StormSight with descriptions in exact sections", async () => {
   const html = await read("public/index.html");
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
@@ -69,10 +69,11 @@ test("project navigation features MusicBox and Weather Radar in exact sections",
   const featured = html.slice(featuredStart, graphicsStart);
   const games = html.slice(gamesStart, learnStart);
   assert.match(featured, />Featured<\/span>/);
-  assert.match(featured, /href="\/musicbox\/"/);
-  assert.match(featured, /href="\/radar\/"[^>]*><span class="site-projects__name">Weather Radar<\/span>/);
+  assert.match(featured, /href="\/musicbox\/"[^>]*><span class="site-projects__name">MusicBox<\/span><span class="site-projects__description">Multi-track Step Sequencer Instrument<\/span>/);
+  assert.match(featured, /href="\/radar\/"[^>]*><span class="site-projects__name">StormSight<\/span><span class="site-projects__description">Doppler Radar Map<\/span>/);
   assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 2);
-  assert.doesNotMatch(html, /site-projects-tools|site-projects__description|>Tools<\/span>/);
+  assert.equal((featured.match(/site-projects__description/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /site-projects-tools|>Tools<\/span>/);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
   assert.doesNotMatch(games, /MusicBox/);
@@ -87,6 +88,7 @@ test("project navigation features MusicBox and Weather Radar in exact sections",
   assert.doesNotMatch(css, /text-transform:\s*uppercase/);
   assert.match(css, /\.site-projects__section-title[\s\S]*?background: #eef2f6/);
   assert.match(css, /#site-projects-featured[\s\S]*?background: #fff0a8/);
+  assert.match(css, /\.site-projects__description[\s\S]*?font-size: 0\.72rem/);
   assert.match(css, /@media \(forced-colors: active\)[\s\S]*?\.site-projects__section-title[\s\S]*?background: Canvas/);
 });
 
@@ -137,7 +139,7 @@ test("public boundary contains only the intended static runtime", async () => {
 });
 
 test("shared navigation and preserved legacy bytes match their fixed release hashes", async () => {
-  assert.equal(await digest("public/site-nav.css"), "55fd75c65dfb627163347c83f907b9e894ada55cde523ba7c8cddfa6f7fda1e1");
+  assert.equal(await digest("public/site-nav.css"), "ce351f3b011d62423d81fb2896d02e31b3f7c9a607edc92fc00fdbe92c836bc8");
   assert.equal(await digest("public/js/site-nav.js"), "ba32a5d679238a223fbdd0772230a30989446a86dca15eccf41b3084b4dab982");
   assert.equal(await digest("legacy/original/README.md"), "989fe7bce42e503b95af5d1fc3e9e66737cb676ccd2a7eb85a1afa63a2bbefe1");
   assert.equal(await digest("legacy/original/gameoflife.py"), "b585a5a32437e0adce964b8fccfe8e43ca87d1f77f6391cbb799bfce2d2a64f7");

@@ -164,6 +164,18 @@
   font-weight: 750;
 }
 
+.site-projects__description {
+  margin-top: 0.08rem;
+  color: #5a687a;
+  font-size: 0.72rem;
+  font-weight: 620;
+  line-height: 1.25;
+}
+
+.site-projects__link[aria-current="page"] .site-projects__description {
+  color: #3d5c8d;
+}
+
 .site-projects--in-header {
   position: relative;
   z-index: 80;
