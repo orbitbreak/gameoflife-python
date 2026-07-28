@@ -20,7 +20,7 @@ async function listFiles(directory, prefix = "public") {
 test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
-    "site-nav.css?v=20260728-nav6",
+    "site-nav.css?v=20260728-nav7",
     "styles.css?v=20260713-life3",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
@@ -57,7 +57,7 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("project navigation features MusicBox and StormSight with descriptions in exact sections", async () => {
+test("project navigation features all four featured apps with descriptions in exact order", async () => {
   const html = await read("public/index.html");
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
@@ -69,10 +69,17 @@ test("project navigation features MusicBox and StormSight with descriptions in e
   const featured = html.slice(featuredStart, graphicsStart);
   const games = html.slice(gamesStart, learnStart);
   assert.match(featured, />Featured<\/span>/);
+  const bandBot = featured.indexOf('href="/bandbot/"');
+  const tickerTags = featured.indexOf('href="/tickertags/"');
+  const musicBox = featured.indexOf('href="/musicbox/"');
+  const stormSight = featured.indexOf('href="/radar/"');
+  assert.ok(bandBot >= 0 && bandBot < tickerTags && tickerTags < musicBox && musicBox < stormSight);
+  assert.match(featured, /href="\/bandbot\/"[^>]*><span class="site-projects__name">BandBot<\/span><span class="site-projects__description">Browser-side AI Music Composer<\/span>/);
+  assert.match(featured, /href="\/tickertags\/"[^>]*><span class="site-projects__name">TickerTags<\/span><span class="site-projects__description">Multi-ticker Stock Chart Viewer<\/span>/);
   assert.match(featured, /href="\/musicbox\/"[^>]*><span class="site-projects__name">MusicBox<\/span><span class="site-projects__description">Multi-track Step Sequencer Instrument<\/span>/);
   assert.match(featured, /href="\/radar\/"[^>]*><span class="site-projects__name">StormSight<\/span><span class="site-projects__description">Doppler Radar Map<\/span>/);
-  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 2);
-  assert.equal((featured.match(/site-projects__description/g) ?? []).length, 2);
+  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 4);
+  assert.equal((featured.match(/site-projects__description/g) ?? []).length, 4);
   assert.doesNotMatch(html, /site-projects-tools|>Tools<\/span>/);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
