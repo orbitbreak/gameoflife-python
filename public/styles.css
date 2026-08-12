@@ -249,8 +249,6 @@ details.tool-card[open] > summary { border-bottom: 1px solid var(--border); }
 .toast.visible { transform: translateY(0); opacity: 1; }
 .toast.error { border-color: #8f554d; background: #3c211e; color: #ffd3cc; }
 
-footer { border-top: 1px solid var(--border); padding: 1.4rem 1rem calc(1.4rem + env(safe-area-inset-bottom)); color: var(--quiet); text-align: center; }
-footer p { margin: 0; font-size: 0.78rem; }
 .noscript { width: min(48rem, calc(100% - 2rem)); border: 1px solid var(--danger); border-radius: 0.7rem; padding: 0.8rem; margin: 1rem auto; color: var(--danger); text-align: center; }
 .visually-hidden {
   position: absolute !important;
@@ -307,7 +305,7 @@ footer p { margin: 0; font-size: 0.78rem; }
 }
 
 @media print {
-  .app-header, .transport, .controls-panel, footer, .toast { display: none !important; }
+  .app-header, .transport, .controls-panel, .toast { display: none !important; }
   body, main, .board-panel { background: #fff; color: #000; box-shadow: none; }
   .lab-shell { display: block; }
 }

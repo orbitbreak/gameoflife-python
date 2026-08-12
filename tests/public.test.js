@@ -21,7 +21,7 @@ test("public shell points at cache-busted local runtime assets", async () => {
   const html = await read("public/index.html");
   for (const asset of [
     "site-nav.css?v=20260728-nav7",
-    "styles.css?v=20260713-life3",
+    "styles.css?v=20260812-life4",
     "icons/life.svg?v=20260713-life1",
     "js/site-nav.js?v=20260713-life1",
     "js/app.js?v=20260713-life3",
@@ -57,45 +57,41 @@ test("every ES module import carries the release cache key", async () => {
   assert.match(app, /\.\/history\.js\?v=20260713-life3/);
 });
 
-test("project navigation features all seven featured apps with descriptions in exact order", async () => {
+test("project navigation features the six published apps in exact order", async () => {
   const html = await read("public/index.html");
   const css = await read("public/site-nav.css");
   const home = html.indexOf(">Home (Ripples)<");
   const featuredStart = html.indexOf('id="site-projects-featured"');
   const graphicsStart = html.indexOf('id="site-projects-graphics"');
   const gamesStart = html.indexOf('id="site-projects-games"');
-  const learnStart = html.indexOf('id="site-projects-learn"');
-  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart && gamesStart < learnStart);
+  assert.ok(home >= 0 && home < featuredStart && featuredStart < graphicsStart && graphicsStart < gamesStart);
   const featured = html.slice(featuredStart, graphicsStart);
-  const games = html.slice(gamesStart, learnStart);
+  const games = html.slice(gamesStart);
   assert.match(featured, />Featured<\/span>/);
   const bandBot = featured.indexOf('href="/bandbot/"');
   const tickerTags = featured.indexOf('href="/tickertags/"');
   const gradientGrove = featured.indexOf('href="/gradientgrove/"');
   const waveLens = featured.indexOf('href="/wavelens/"');
-  const orbitForge = featured.indexOf('href="/orbitforge/"');
   const musicBox = featured.indexOf('href="/musicbox/"');
   const stormSight = featured.indexOf('href="/radar/"');
-  assert.ok(musicBox >= 0 && musicBox < stormSight && stormSight < bandBot && bandBot < tickerTags && tickerTags < gradientGrove && gradientGrove < waveLens && waveLens < orbitForge);
+  assert.ok(musicBox >= 0 && musicBox < bandBot && bandBot < waveLens && waveLens < stormSight && stormSight < gradientGrove && gradientGrove < tickerTags);
   assert.match(featured, /href="\/musicbox\/"[^>]*><span class="site-projects__name">MusicBox<\/span><span class="site-projects__description">Paint the grid\. Play the groove\.<\/span>/);
   assert.match(featured, /href="\/radar\/"[^>]*><span class="site-projects__name">StormSight<\/span><span class="site-projects__description">Doppler Radar Map<\/span>/);
   assert.match(featured, /href="\/bandbot\/"[^>]*><span class="site-projects__name">BandBot<\/span><span class="site-projects__description">Music Composition Studio<\/span>/);
   assert.match(featured, /href="\/tickertags\/"[^>]*><span class="site-projects__name">TickerTags<\/span><span class="site-projects__description">Multi-ticker Stock Chart Viewer<\/span>/);
   assert.match(featured, /href="\/gradientgrove\/"[^>]*><span class="site-projects__name">Gradient Grove<\/span><span class="site-projects__description">Neural network playground<\/span>/);
   assert.match(featured, /href="\/wavelens\/"[^>]*><span class="site-projects__name">WaveLens<\/span><span class="site-projects__description">Live sound visualizer<\/span>/);
-  assert.match(featured, /href="\/orbitforge\/"[^>]*><span class="site-projects__name">Orbit Forge<\/span><span class="site-projects__description">Orbital physics sandbox<\/span>/);
-  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 7);
-  assert.equal((featured.match(/site-projects__description/g) ?? []).length, 7);
+  assert.equal((featured.match(/class="site-projects__link"/g) ?? []).length, 6);
+  assert.equal((featured.match(/site-projects__description/g) ?? []).length, 6);
+  assert.doesNotMatch(html, /Orbit Forge|\/orbitforge\//);
   assert.doesNotMatch(html, /site-projects-tools|>Tools<\/span>/);
   assert.match(html.slice(graphicsStart, gamesStart), />Graphics<\/span>/);
   assert.match(games, />Games<\/span>/);
   assert.doesNotMatch(games, /MusicBox/);
-  assert.match(html.slice(learnStart), />Learn<\/span>/);
-  assert.match(html.slice(learnStart), /href="\/LLM101\/"[^>]*><span class="site-projects__name">LLMs 101 Textbook<\/span>/);
-  assert.match(html.slice(learnStart), /href="\/Blockchain101-EVM\/"[^>]*><span class="site-projects__name">Blockchain 101: EVM<\/span>/);
+  assert.doesNotMatch(html, /site-projects-learn|>Learn<\/span>|\/LLM101\/|\/Blockchain101-EVM\//);
   const platform = games.indexOf("Platform Jumper");
   const snake = games.indexOf("Snake Autorandom");
-  const ticTacToe = games.indexOf("Hard Mode Tic-Tac-Toe");
+  const ticTacToe = games.indexOf("Tic-Tac-Toe Hardmode");
   const life = games.indexOf("Conway’s Game of Life");
   assert.ok(platform >= 0 && platform < snake && snake < ticTacToe && ticTacToe < life);
   assert.match(games, /href="\/gameoflife\/" aria-current="page"/);
@@ -104,6 +100,12 @@ test("project navigation features all seven featured apps with descriptions in e
   assert.match(css, /#site-projects-featured[\s\S]*?background: #fff0a8/);
   assert.match(css, /\.site-projects__description[\s\S]*?font-size: 0\.72rem/);
   assert.match(css, /@media \(forced-colors: active\)[\s\S]*?\.site-projects__section-title[\s\S]*?background: Canvas/);
+});
+
+test("public chrome omits promotional privacy copy and standalone site-home buttons", async () => {
+  const html = await read("public/index.html");
+  assert.doesNotMatch(html, /<footer|Local Only|Privacy|Nothing leaves this browser|entirely local/i);
+  assert.doesNotMatch(html, />\s*jasonsher\.com\s*</i);
 });
 
 test("app selects Classic Soup for fresh visits and clears malformed or stale Life hashes", async () => {
